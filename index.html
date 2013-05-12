@@ -15,7 +15,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 		<link rel="stylesheet" href="css/reveal.min.css">
-		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+		<link rel="stylesheet" href="css/theme/sky.css" id="theme">
 
 		<!-- For syntax highlighting -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
@@ -38,12 +38,141 @@
 			<div class="slides">
 
 				<section>
-					<h1>Reveal.js</h1>
-					<h3>HTML Presentations Made Easy</h3>
+					<h1>How to Build a Drupal Module</h1>
+					<h4>(and why you would want to ... )</h4>
 					<p>
-						<small>Created by <a href="http://hakim.se">Hakim El Hattab</a> / <a href="http://twitter.com/hakimel">@hakimel</a></small>
+						<small>Created by <a href="http://twitter.com/schnippy">Greg Schnippel</a>, <a href="http://www.taoti.com">Taoti Creative</a></small>
 					</p>
 				</section>
+
+				<section>
+					<h2>Scope of this Presentation</h2>
+
+					<aside class="notes">
+This session is for 'intermediate' Drupal developers who are comfortable working with the Drupal platform and coding in PHP but might not have had the opportunity to develop modules. One of the advantages of the Drupal platform is the wealth of existing modules that cover most site needs but that means that a lot of intermediate Drupal developers can work on a site for years before needing to develop a custom module. This presentation will show you how to make a basic module, then introduce a number of useful hooks that are available in Drupal to improve your site. 
+					</aside>
+				</section>
+
+				<section>
+					<h2>Following Along</h2>
+
+					<ul>
+						<li class="fragment">Full presentation is on Github at: http://github.com/taoti</li>
+						<li class="fragment">All code samples we are using at: http://github.com/taoti/</li>
+						<li class="fragment">PDF is up at http://github.com/taoti/</li>
+					</ul>
+
+				</section>
+
+				<section>
+					<h2>Why Build a Module?</h2>
+					<ul>
+						<li class="fragment">Because, awesome</li>
+						<li class="fragment">Career advancement</li>
+						<li class="fragment">Add new functionality to your site</li>
+						<li class="fragment">Code management</li>
+						<li class="fragment">Contribute back to the community</li>						
+					</ul>
+
+					<aside class="notes">
+						This slide has fragments which are also stepped through in the notes window.
+					</aside>
+				</section>
+
+				<section>
+					<section>
+						<h2>Basic Module</h2>
+						<p>Create an .info file</p>
+						<pre><code contenteditable>
+	name = Basic Module
+	description = Simple module definition 
+	core = 7.x
+	package = DCWW
+						</code></pre>
+					</section>
+					<section>
+						<h2>Basic Module</h2>
+						<p>Create the .module file</p>
+						<pre><code contenteditable>
+	
+	/* Module Code here .. */
+	
+	
+						</code></pre>
+					</section>
+				</section>
+				
+				<section>
+					<section>
+						<h2>Javascript Module</h2>
+						<p>Create an .info file</p>
+						<pre><code contenteditable>
+name = Javascript / CSS Module
+description = Module to demonstrate implementation of custom JS code
+core = 7.x
+package = DCWW
+						</code></pre>
+					</section>
+					<section>
+						<h2>Javascript Module</h2>
+						<p>Add files to the module in an info file</p>
+						<pre><code contenteditable>
+scripts[] = cornify/cornify.js
+;stylesheets[all][] = cornify.css	
+;files[] = cornify.inc.php
+						</code></pre>
+					<aside class="notes">
+						This works but there is no trigger added by default to the add_cornify() function, so I'll want to create one using custom code. 
+					</aside>						
+					</section>
+					<section>
+						<h2>Javascript Module</h2>
+						<p>Drupal 7 Javascript template</p>
+						<pre><code contenteditable>
+(function ($) {
+  Drupal.behaviors.[[UNIQUE NAME]] =  {
+    attach: function(context, settings) {
+
+
+    }
+  };
+})(jQuery);
+						</code></pre>
+					</section>
+					
+					<section>
+						<h2>Javascript Module</h2>
+						<p>Bind javascript to the 'u' key</p>
+						<pre><code contenteditable>
+(function ($) {
+  Drupal.behaviors.cornify =  {
+    attach: function(context, settings) {
+         $(document).keyup(function(e) {
+           if(e.keyCode == 85){
+             cornify_add();
+           }
+         });
+    }
+  };
+})(jQuery);
+						</code></pre>
+					</section>
+
+				</section>
+
+				<section>
+					<h2>More Resources</h2>
+					<ul>
+						<li class="fragment"><a href="http://drupal.org/node/1074360">Drupal.org Module Development</a></li>
+						<li class="fragment"><a href="http://drupal.org/project/examples">Examples Module</a></li>
+					</ul>
+
+					<aside class="notes">
+						This slide has fragments which are also stepped through in the notes window.
+					</aside>
+				</section>
+
+
 
 				<section>
 					<h2>Heads Up</h2>
