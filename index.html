@@ -118,6 +118,9 @@ package = DCWW
 					</section>
 					<section>
 						<img src="images/drudgeAfter.jpg">
+					<aside class="notes">
+For this module we are going to use as an example, a fun little script called cornify, which if you haven't seen this before it can be used to make a site more awesome. If you were hoping for something a little more serious, you can always substitute the more utilitarian DataTables.net every time you here me say the words cornify from now on. I'm downloading the cornify script from http://www.cornify.com/js/cornify.js
+					</aside>
 					</section>
 					<section>
 						<h2>Datatables.net</h2>
@@ -132,7 +135,7 @@ scripts[] = cornify/cornify.js
 ;files[] = cornify.inc.php
 						</code></pre>
 					<aside class="notes">
-						This works but there is no trigger added by default to the add_cornify() function, so I'll want to create one using custom code. 
+This works but there is no trigger added by default to the add_cornify() function, so I'll want to create one using custom code. 
 					</aside>						
 					</section>
 					<section>
@@ -148,6 +151,9 @@ scripts[] = cornify/cornify.js
   };
 })(jQuery);
 						</code></pre>
+					<aside class="notes">
+					Query is now namespaced to avoid conflicts with other Javascript libraries such as Prototype. All your code that expects to use jQuery as $ should be wrapped in an outer context like so.
+					</aside>
 					</section>
 					
 					<section>
@@ -167,8 +173,108 @@ scripts[] = cornify/cornify.js
 })(jQuery);
 						</code></pre>
 					</section>
-
 				</section>
+				<section>				
+					<section>
+						<h2>Node Preprocess and Permissions</h2>
+<pre><code contenteditable>
+name = DCWW Javascript Node
+description = Module to demonstrate implementation of node_preprocess and hook_permissions
+core = 7.x
+package = DCWW
+</code></pre>
+					<aside class="notes">
+That last module demonstrated ability to add assets like javascript and CSS, now I want to show how I can modify this module to restrict access to this content for specific users or on specific content types or pages. So create a new folder, a new info file and this time we're not going to globally add the javscript files.
+					</aside>
+					
+					</section>										
+					<section>
+						<h2>hook preprocess_node()</h2>
+<pre><code contenteditable>
+function dcww_js_node_preprocess_node(&$vars) {
+
+  //print_r($vars);
+
+  if ($vars["type"] == "article") {
+
+        drupal_add_js(drupal_get_path("module","dcww_js")."/cornify/cornify.js");
+        drupal_add_js(drupal_get_path("module","dcww_js")."/cornify/cornifykeys.js");
+
+  }
+
+}
+</code></pre>
+					</section>
+					<section>
+						<h2>hook_permission()</h2>
+<pre><code contenteditable>
+function dcww_js_node_permission() {
+  return array(
+    'access cornify' => array(
+      'title' => t('Access cornify'),
+    ),
+    'i say so' => array(
+      'title' => t('Only if I say so'),
+    ),
+  );
+}
+</code></pre>
+					</section>
+
+					<section>
+						<h2>user_access()</h2>
+<pre><code contenteditable>
+function dcww_js_node_preprocess_node(&$vars) {
+
+  if ($vars["type"] == "article") {
+  	if (user_access("access cornify") && user_access("i say so")) {  
+        drupal_add_js(drupal_get_path("module","dcww_js")."/cornify/cornify.js");
+        drupal_add_js(drupal_get_path("module","dcww_js")."/cornify/cornifykeys.js");
+    }
+
+  }
+}
+</code></pre>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>FEATURES INTERMISSION</h2>
+					</section>
+					<section>
+						<h2>creating a twitter widget</h2>
+<pre><code contenteditable>
+<a class="twitter-timeline" href="https://twitter.com/TheDailyShow" data-widget-id="334156913099014144">Tweets by @TheDailyShow</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</code></pre>
+					<aside class="notes">
+I want to output a simple twitter widget as a block but export it to code in a module.
+					</aside>
+					</section>
+				<section>
+					<h2>creating a new .info file</h2>
+<pre><code contenteditable>
+name = 4. Block Example
+description = Module to demonstrate hook_block()
+core = 7.x
+package = DCWW
+</code></pre>
+				</section>
+				<section>
+						<h2>hook_block_info</h2>
+<pre><code contenteditable>
+function current_posts_block_info() {
+  $blocks['daily_show_block'] = array(
+    'info' => t('Output block of Daily Show Tweets'), 
+    'cache' => DRUPAL_CACHE_PER_ROLE, //Default
+    //'status' => 1,
+    //'region' => 'sidebar'
+  );
+  return $blocks;
+}
+</code></pre>
+				</section>
+			</section>
 
 				<section>
 					<h2>More Resources</h2>
