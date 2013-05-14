@@ -139,3 +139,9 @@ body {
 	color: #fff;
 	padding-top: 15px;
 }
+
+.taoti {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+}
